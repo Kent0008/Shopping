@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<section>
+  <div class="container">
+    <h1>POPULAR</h1>
+
+    <div class="price" style=" width: 100%; display: flex; justify-content: end;">
+      <p style="color: white;">Total Price: {{total_price}} $</p>
+      <a style="margin: 7px; width: 60px; height: 30px; background-color: aqua; display: flex; justify-content: center; align-items: center; text-decoration: none; color:chocolate;" href="{% url 'addorder' %}">Купить</a>
+    </div>
+
+    <div class="row">
+      {% for product in products %}
+      <div class="block">
+        <div class="image">
+          <img src="{{ product.products.image.url }}" alt="" />
+          <div class="bg_color">
+            <div class="center_text">
+
+              <form action="{% url 'update' product.id %}" method="POST">
+                {% csrf_token %}
+                <input style="width: 40px;" type="number" min="0" max="{{ product.products.quant }}" value="{{product.quant}}" name="quant" id="">
+                <input type="submit" value="submit">
+              </form>
+
+              <a href="{% url 'info' product.id  %}">Viwe</a>
+            </div>
+          </div>
+          <div class="text">
+            <h3>{{ product.products.name }}</h3>
+            <p>Price: {{ product.price }}$</p>
+          </div>
+        </div>
+        <div class="discount">
+          <span>скидка -50%</span>
+        </div>
+      </div>
+      {% endfor %}
+  </div>
+</section>
+
+{% endblock content %}

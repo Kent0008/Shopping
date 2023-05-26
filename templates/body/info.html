@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/info.css' %}">
+
+    <div class="container">
+        <div class="info">
+            <div class="card_img">
+                <img src="{{ product.image.url }}" alt="">
+            </div>
+            <div class="descriptions">
+                <h1>{{ product.name }}</h1>
+                <p>{{ product.descriptions|truncatechars:50 }}</p>
+                
+
+                <p>Price: <span>{{ product.price }}</span></p>
+                <p>Gender: <span>{{ product.gender }}</span></p>
+                <p>Size: <span>{{ product.size }}</span></p>
+                <!-- <p>P: <span></span></p> -->
+                <form action="#">
+                    <label for="#"> Quant: </label>
+                    <div class="number">
+                        <button class="number-minus" type="button" onclick="this.nextElementSibling.stepDown(); this.nextElementSibling.onchange();">-</button>
+                        <input type="number" min="1" max="20" value="1" readonly>
+                        <button class="number-plus" type="button" onclick="this.previousElementSibling.stepUp(); this.previousElementSibling.onchange();">+</button>
+                    </div>
+                    <div class="btn_submit">
+                        <input type="submit" value="Add to cart">
+
+                        <a href="{{request.META.HTTP_REFERER}}">Back</a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <section>
+      <div class="container">
+        <h1>РЕКОМЕНДАЦИИ</h1>
+    
+        <div class="row">
+          {% for pro in products %}
+
+          {% if pro.id != product.id %}
+          <div class="block">
+            <div class="image">
+              <img
+                src="{{ pro.image.url }}"
+                alt="" />
+              <div class="bg_color">
+                <div class="center_text">
+                  <a href="#">Add to cart</a>
+                  <a href="{% url 'info' pro.id  %}">Viwe</a>
+                </div>
+              </div>
+              <div class="text">
+                <h3>{{ pro.name }}</h3>
+                <p>Price: {{ pro.price }}$</p>
+              </div>
+            </div>
+            <div class="discount">
+              <span>скидка -50%</span>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+      </div>
+    </section>
+
+    <div class="container">
+        <div class="comment">
+            <div class="form">
+                <h2>Comment</h2>
+                <form action="{% url 'addcomment' product.id %} " method="POST">
+                  {% csrf_token %}
+                  {% if messages %}
+                    {% for i in messages %}
+                        <p style="color: red; font-size: 17px;">{{ i }}</p>
+                    {% endfor %}
+                  {% endif %}
+                <div class="input">
+                    <label for="">Username</label>
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+                <div class="input">
+                    <label for="">Comment</label>
+                    <textarea name="descriptions" id=""  placeholder="Descriptions" required></textarea>
+                </div>
+                <div class="btn_submit">
+                    <input type="submit" value="Отправить">
+                </div>
+            </form>
+            </div>
+            
+            <div class="text">
+                <div class="row">
+                    <h1>Comment</h1>
+                    {% for i in comment %}
+                    <div class="text_comment">
+                        <p class="b-color">@{{i.username}}</p>
+                        <p class="b-text">{{i.comment}}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+    
+
+
+{% endblock content %}
